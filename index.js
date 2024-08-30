@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
@@ -23,6 +23,15 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const blogCollection = client.db("blogMaster").collection("blogs");
+
+    app.post("/createBlog", async (req, res) => {
+      const data = req.body;
+      console.log(data);
+      const result = await blogCollection.insertOne(data);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
